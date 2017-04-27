@@ -1,0 +1,73 @@
+#Se tiene una muestra de 80 polizas del ramo de gastos medicos
+#La probabilidad de que una de ellas tenga siniestros es de 0.2%
+#Estudie la variable aleatoria suponiendo una distribucion binomial 
+#Lo anterior debido a que se seleccionara si la póliza tiene o no siniestros
+#  x~B(80,02),  mi  v.a. va x=0,1,2,.....80
+
+# a) Calcular las probabilidades desde 0 a 80 (para todos los eventos)
+# b) Probabilidades acumuladas, graficos de cada unos de ellos
+# c) Grafico en el que se presente ambos
+# d) Media, Varianza, Desviestandar con formulas de las dist
+# e) A través de los valores esperados  obtengar el valor de E[(x^2) - 2x]
+# f) Informe de los percentiles y análisis de la cartera 
+# g) Análisis del Sesgo
+# h) Probabilidad de tener 5 siniestros de las polizas de la muestra
+# i) Calcular la Probabilidad de tener P[1<=x<=8]
+# j) Calcular la Probabilidad de tener P[x<=3] o P[x>1]
+polizas<-seq(0,80, by=1)
+polizas
+n=80
+p=.20
+pgm<-dbinom(polizas,n,prob=p)
+pgm
+plot(polizas,pgm,type="l", xlab="Polizas", ylab="Probabilidad de Siniestros")
+#Distribución Acumulada (P<=x)
+FXGM<-pbinom(polizas,n,prob=p)
+FXGM
+plot(polizas,FXGM,type="s", ylab="Probabilidad Acumulada", xlab="Pólizas")
+points(polizas,pgm,type="b", col="red")
+media_gm=n*p
+media_gm
+varianza_gm=n*p*(1-p)
+varianza_gm
+desvest_gm=varianza_gm^.05
+desvest_gm
+
+#Obtenga el valor de E[(x^2)-2x]
+val_esp<-sum(((polizas^2)-2*polizas)*pgm)
+val_esp
+#Percentiles
+gm_per<-seq(0,1,by=0.05)
+gm_per
+per70<-qbinom(.70,n,p)
+per70
+percentiles_gm<-qbinom(gm_per,n,p)
+percentiles_gm
+informe_gm_percentiles<-cbind(gm_per,percentiles_gm)
+informe_gm_percentiles
+#Calcular la probabilidad de que tengamos 5 siniestros
+probgm_1<-dbinom(5,n,p)
+probgm_1
+#Calcular la Probabilidad de que tengamos menos de 4 siniestros
+probgm_2<-pbinom(4,n,p)
+probgm_2
+#Calcular la probabilidad de tener  P[1<=x<8]= P[x<=7]- P[x<=0]
+probgm_3=pbinom(7,n,p)-pbinom(0,n,p)
+probgm_3
+#Simular valores con distribución Binomial, enteros entres
+simulados_gm<-rbinom(10000,n,p)
+simulados_gm
+min(simulados_gm)
+max(simulados_gm)
+hist(simulados_gm,col="red")
+desv<-varianza_gm^.5
+intervalo<-media_gm+2*desv
+intervalo
+intervalo<-media_gm+3*desv
+intervalo
+intervalo<-media_gm-3*desv
+intervalo
+media_gmsim<-mean(simulados_gm)
+media_gmsim
+var_gmsim<-var(simulados_gm)
+var_gmsim
